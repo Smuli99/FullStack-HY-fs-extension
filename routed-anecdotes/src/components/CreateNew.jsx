@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useField } from '../hooks/index';
 
 const CreateNew = ({ addNew }) => {
-  const { content, author, info } = useField('text');
+  const { content, author } = useField('text');
+  const { info } = useField('url');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
