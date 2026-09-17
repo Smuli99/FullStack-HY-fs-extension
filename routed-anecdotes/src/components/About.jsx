@@ -10,6 +10,6 @@ const About = () => (
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
     <p>See <a href='https://github.com/fullstack-hy2020/routed-anecdotes'>https://github.com/fullstack-hy2020/routed-anecdotes</a> for the source code.</p>
   </div>
-)
+);
 
-export default About
+export default About;

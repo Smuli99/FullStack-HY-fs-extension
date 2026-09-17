@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Menu from './components/Menu'
-import AnecdoteList from './components/AnecdoteList'
-import About from './components/About'
-import Footer from './components/Footer'
-import CreateNew from './components/CreateNew'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Menu from './components/Menu';
+import AnecdoteList from './components/AnecdoteList';
+import About from './components/About';
+import Footer from './components/Footer';
+import CreateNew from './components/CreateNew';
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -22,11 +22,11 @@ const App = () => {
       votes: 0,
       id: 2
     }
-  ])
+  ]);
 
   const addAnecdote = (anecdote) => {
-    setAnecdotes(anecdotes.concat({ ...anecdote, id: Math.round(Math.random() * 10000) }))
-  }
+    setAnecdotes(anecdotes.concat({ ...anecdote, id: Math.round(Math.random() * 10000) }));
+  };
 
   return (
     <Router>
@@ -41,7 +41,7 @@ const App = () => {
         <Footer />
       </div>
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;

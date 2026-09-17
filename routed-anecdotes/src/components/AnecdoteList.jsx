@@ -5,6 +5,6 @@ const AnecdoteList = ({ anecdotes }) => (
       {anecdotes.map(anecdote => <li key={anecdote.id}>{anecdote.content}</li>)}
     </ul>
   </div>
-)
+);
 
-export default AnecdoteList
+export default AnecdoteList;
