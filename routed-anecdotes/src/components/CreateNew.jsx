@@ -9,7 +9,12 @@ const CreateNew = ({ addNew }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addNew({ content, author, info, votes: 0 });
+    addNew({ 
+      content: content.value,
+      author: author.value,
+      info: info.value,
+      votes: 0
+    });
     navigate("/");
   };
 

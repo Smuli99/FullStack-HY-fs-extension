@@ -24,5 +24,10 @@ export const useAnecdotes = () => {
     fetchData();
   }, []);
 
-  return { anecdotes };
+  const addAnecdote = async (obj) => {
+    const newObj = await anecdoteService.createNew(obj);
+    setAnecdotes(anecdotes.concat(newObj));
+  };
+
+  return { anecdotes, addAnecdote };
 };
