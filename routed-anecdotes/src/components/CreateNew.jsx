@@ -2,14 +2,21 @@ import { useNavigate } from "react-router-dom";
 import { useField } from '../hooks/index';
 
 const CreateNew = ({ addNew }) => {
-  const { content, author } = useField('text');
-  const { info } = useField('url');
+  const content = useField('text');
+  const author = useField('text');
+  const info = useField('url');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addNew({ content, author, info, votes: 0 });
     navigate("/");
+  };
+
+  const handleReset = () => {
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   return (
@@ -29,6 +36,7 @@ const CreateNew = ({ addNew }) => {
           <input {...info} />
         </div>
         <button>create</button>
+        {/* <button type="button" onClick={handleReset}>reset</button> */}
       </form>
     </div>
   );
