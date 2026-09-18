@@ -29,10 +29,10 @@ export const useAnecdotes = () => {
     setAnecdotes(anecdotes.concat(newObj));
   };
 
-  const removeAnecdote = async (id) => {
+  const deleteAnecdote = async (id) => {
     await anecdoteService.remove(id);
     setAnecdotes(anecdotes.filter(anecdote => anecdote.id !== id));
   };
 
-  return { anecdotes, addAnecdote, removeAnecdote };
+  return { anecdotes, addAnecdote, deleteAnecdote };
 };
