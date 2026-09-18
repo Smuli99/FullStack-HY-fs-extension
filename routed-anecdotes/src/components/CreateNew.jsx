@@ -36,7 +36,7 @@ const CreateNew = ({ addNew }) => {
           <input {...info} />
         </div>
         <button>create</button>
-        {/* <button type="button" onClick={handleReset}>reset</button> */}
+        <button type="button" onClick={handleReset}>reset</button>
       </form>
     </div>
   );
