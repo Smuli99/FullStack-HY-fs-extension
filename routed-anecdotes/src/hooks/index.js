@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import anecdoteService from '../services/anecdotes';
 
 export const useField = (type) => {
   const [value, setValue] = useState('');
@@ -9,4 +10,19 @@ export const useField = (type) => {
   const fieldProps = { type, value, onChange };
 
   return [fieldProps, reset];
+};
+
+export const useAnecdotes = () => {
+  const [anecdotes, setAnecdotes] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await anecdoteService.getAll();
+      setAnecdotes(data);
+    };
+
+    fetchData();
+  }, []);
+
+  return { anecdotes };
 };
