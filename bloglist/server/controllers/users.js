@@ -1,0 +1,50 @@
+const bcrypt = require('bcrypt');
+const usersRouter = require('express').Router();
+const User = require('../models/user');
+
+usersRouter.get('/', async (req, res) => {
+  const users = await User.find({}).populate('blogs', {
+    url: 1,
+    title: 1,
+    author: 1,
+  });
+  res.status(200).json(users);
+});
+
+usersRouter.get('/:id', async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.status(400).send({
+      error: `User with id '${req.params.id}' not found`
+    });
+  }
+
+  await user.populate('blogs', { url: 1, title: 1, author: 1 });
+  res.status(200).json(user);
+});
+
+usersRouter.post('/', async (req, res) => {
+  const { username, name, password } = req.body;
+
+  if (!password) {
+    return res.status(400).send({ error: '`password` is required' });
+  }
+
+  if (password.trim().length < 8) {
+    return res.status(400).send({
+      error: `\`password\` (\`${password}\`, length ${password.length}) is shorter than the minimum allowed length (8)`,
+    });
+  }
+
+  const user = new User({
+    username,
+    name,
+    password: await bcrypt.hash(password, 10),
+  });
+
+  await user.save();
+  res.status(201).json(user);
+});
+
+module.exports = usersRouter;
