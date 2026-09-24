@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom';
 import { Container, AppBar, Toolbar, Button } from '@mui/material';
+import useNotify from './hooks/useNotify';
 
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
@@ -25,7 +26,8 @@ const App = () => {
 
   const [user, setUser] = useState(getLoggedUser);
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
+
+  const { notify, resetNotify } = useNotify();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,17 +58,11 @@ const App = () => {
 
       setUser(user);
 
-      setNotification({
-        type: 'success',
-        text: `${user.username} logged in!`
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(`${user.username} logged in!`);
+      setTimeout(() => resetNotify(), 3000);
     } catch {
-      setNotification({
-        type: 'error',
-        text: 'wrong username or password'
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify('wrong username or password', 'error');
+      setTimeout(() => resetNotify(), 3000);
     };
   };
 
@@ -75,11 +71,8 @@ const App = () => {
     window.localStorage.clear();
     setUser(null);
 
-    setNotification({
-      type: 'success',
-      text: 'logged out succesfully'
-    });
-    setTimeout(() => setNotification(null), 3000);
+    notify('logged out succesfully');
+    setTimeout(() => resetNotify(), 3000);
   };
 
   const createBlog = async (blog) => {
@@ -87,17 +80,11 @@ const App = () => {
       const savedBlog = await blogServices.create(blog);
       setBlogs(blogs.concat(savedBlog));
 
-      setNotification({
-        type: 'success',
-        text: `\`${blog.title}\` by ${blog.author} added!`
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(`\`${blog.title}\` by ${blog.author} added!`);
+      setTimeout(() => resetNotify(), 3000);
     } catch (error) {
-      setNotification({
-        type: 'error',
-        text: error.response.data.error
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(error.response.data.error, 'error');
+      setTimeout(() => resetNotify(), 3000);
     }
   };
 
@@ -115,11 +102,8 @@ const App = () => {
     } catch (error) {
       console.log(error);
 
-      setNotification({
-        type: 'error',
-        text: 'some error happened'
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(error.response.data.error, 'error');
+      setTimeout(() => resetNotify(), 3000);
     }
   };
 
@@ -137,17 +121,11 @@ const App = () => {
         blogs.filter(blog => blog.id !== blogToDelete.id)
       );
 
-      setNotification({
-        type: 'success',
-        text: `Blog ${blogToDelete.title} by ${blogToDelete.author} deleted!`
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(`Blog ${blogToDelete.title} by ${blogToDelete.author} deleted!`);
+      setTimeout(() => resetNotify(), 3000);
     } catch (error) {
-      setNotification({
-        type: 'error',
-        text: error.response.data.error
-      });
-      setTimeout(() => setNotification(null), 3000);
+      notify(error.response.data.error, 'error');
+      setTimeout(() => resetNotify(), 3000);
     }
   };
 
@@ -173,7 +151,7 @@ const App = () => {
 
 
       <ErrorBoundary>
-        <Notification notification={notification} />
+        <Notification />
 
         <Routes>
           <Route path='/' element={
