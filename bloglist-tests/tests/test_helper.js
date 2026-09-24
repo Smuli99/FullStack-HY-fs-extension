@@ -11,11 +11,6 @@ export const createUser = async (request, user) => {
 
 export const apiLogin = async (request, credentials) => {
   const response = await request.post(`${SERVER_URL}/api/login`, { data: credentials })
-
-  console.log('status:', response.status())
-  console.log('url:', response.url())
-  console.log('body:', await response.text())
-  
   return response.json()
 }
 
