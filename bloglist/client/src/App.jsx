@@ -7,6 +7,7 @@ import LoginForm from './components/LoginForm';
 import BlogApp from './components/BlogApp';
 import Blog from './components/Blog';
 import NewBlogForm from './components/NewBlogForm';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import blogServices from './services/blogs';
 import loginServices from './services/login';
@@ -169,31 +170,34 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification notification={notification} />
 
-      <Routes>
-        <Route path='/' element={
-          <BlogApp
-            blogs={sortedBlogs}
-            user={user}
-            removeBlog={removeBlog}
-          />
-        } />
-        <Route path='/blogs/:id' element={
-          <Blog
-            blog={blog}
-            user={user}
-            removeBlog={removeBlog}
-            updateBlogsLikes={updateBlogsLikes}
-          />
-        } />
-        <Route path='/login' element={
-          <LoginForm login={login} />
-        } />
-        <Route path='/create' element={
-          <NewBlogForm createBlog={createBlog} />
-        } />
-      </Routes>
+      <ErrorBoundary>
+        <Notification notification={notification} />
+
+        <Routes>
+          <Route path='/' element={
+            <BlogApp
+              blogs={sortedBlogs}
+              user={user}
+              removeBlog={removeBlog}
+            />
+          } />
+          <Route path='/blogs/:id' element={
+            <Blog
+              blog={blog}
+              user={user}
+              removeBlog={removeBlog}
+              updateBlogsLikes={updateBlogsLikes}
+            />
+          } />
+          <Route path='/login' element={
+            <LoginForm login={login} />
+          } />
+          <Route path='/create' element={
+            <NewBlogForm createBlog={createBlog} />
+          } />
+        </Routes>
+      </ErrorBoundary>
     </Container>
   );
 };
