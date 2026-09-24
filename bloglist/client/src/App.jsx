@@ -11,6 +11,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 import blogServices from './services/blogs';
 import loginServices from './services/login';
+import NotFound from './components/NotFound';
 
 
 const App = () => {
@@ -196,6 +197,7 @@ const App = () => {
           <Route path='/create' element={
             <NewBlogForm createBlog={createBlog} />
           } />
+          <Route path='*' element={ <NotFound /> } />
         </Routes>
       </ErrorBoundary>
     </Container>
