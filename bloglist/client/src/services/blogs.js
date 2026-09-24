@@ -14,7 +14,7 @@ const getAll = async () => {
 
 const create = async (blog) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   };
 
   const res = await axios.post(baseUrl, blog, config);
@@ -28,19 +28,10 @@ const update = async (blog) => {
 
 const remove = async (blog) => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   };
 
   await axios.delete(`${baseUrl}/${blog.id}`, config);
-};
-
-const addComment = async (id, comment) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-
-  const res = await axios.post(`${baseUrl}/${id}/comments`, { comment }, config);
-  return res.data;
 };
 
 export default {
@@ -49,5 +40,4 @@ export default {
   create,
   update,
   remove,
-  addComment,
 };

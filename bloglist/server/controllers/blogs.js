@@ -36,33 +36,8 @@ blogRouter.post('/', userExtractor, async (req, res) => {
   await savedBlog.populate('user', { username: 1, name: 1 });
 
   user.blogs = user.blogs.concat(savedBlog.id);
-  await user.save();
 
   res.status(201).json(savedBlog);
-});
-
-blogRouter.post('/:id/comments', userExtractor, async (req, res) => {
-  const { comment } = req.body;
-  const user = req.user;
-
-  if (!user) {
-    return res.status(401).json({ error: 'token missing or invalid' });
-  }
-
-  const blog = await Blog.findById(req.params.id);
-
-  if (!blog) {
-    return res
-      .status(404)
-      .json({ error: `blog with id \`${req.params.id}\` not found` });
-  }
-
-  blog.comments = blog.comments.concat(comment);
-
-  const updatedBlog = await blog.save(blog);
-  await updatedBlog.populate('user', { username: 1, name: 1 });
-
-  res.status(200).json(updatedBlog);
 });
 
 blogRouter.put('/:id', async (req, res) => {
@@ -70,9 +45,7 @@ blogRouter.put('/:id', async (req, res) => {
   const blogToUpdate = await Blog.findById(req.params.id);
 
   if (!blogToUpdate) {
-    return res
-      .status(404)
-      .json({ error: `blog with id \`${req.params.id}\` not found` });
+    return res.status(404).json({ error: `blog with id \`${req.params.id}\` not found` });
   }
 
   blogToUpdate.title = title;
@@ -96,9 +69,7 @@ blogRouter.delete('/:id', userExtractor, async (req, res) => {
   const blogToDelete = await Blog.findById(req.params.id);
 
   if (user.id.toString() !== blogToDelete.user.toString()) {
-    return res
-      .status(401)
-      .json({ error: 'blog can only be deleted by its creator' });
+    return res.status(401).json({ error: 'blog can only be deleted by its creator' });
   }
 
   await blogToDelete.deleteOne();

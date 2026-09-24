@@ -11,7 +11,7 @@ describe('<NewBlogForm />', () => {
     mockHandler = vi.fn();
     render(
       <Router>
-        <NewBlogForm createBlog={mockHandler} />
+        <NewBlogForm createBlog={mockHandler}/>
       </Router>
     );
   });

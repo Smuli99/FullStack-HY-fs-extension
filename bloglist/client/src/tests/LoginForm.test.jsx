@@ -10,7 +10,7 @@ describe('<LoginForm />', () => {
   beforeEach(() => {
     render(
       <Router>
-        <LoginForm login={login} />
+        <LoginForm login={login}/>
       </Router>
     );
   });
@@ -40,7 +40,7 @@ describe('<LoginForm />', () => {
     expect(login.mock.calls).toHaveLength(1);
     expect(login.mock.calls[0][0]).toStrictEqual({
       username: 'Foo Bar',
-      password: 'password123',
+      password: 'password123'
     });
   });
 });

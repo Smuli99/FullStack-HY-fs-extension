@@ -16,7 +16,7 @@ describe('login', () => {
     const user = helper.initialUsers[0];
     const credentials = {
       username: user.username,
-      password: user.password,
+      password: user.password
     };
 
     const res = await api
@@ -33,7 +33,7 @@ describe('login', () => {
     const user = helper.initialUsers[0];
     const credentials = {
       username: user.username,
-      password: user.password,
+      password: user.password
     };
 
     const res = await api
@@ -48,10 +48,13 @@ describe('login', () => {
   test('fails with proper status code and message if incorrect credentials', async () => {
     const credentials = {
       username: 'wrong',
-      password: 'oops',
+      password: 'oops'
     };
 
-    const res = await api.post('/api/login').send(credentials).expect(401);
+    const res = await api
+      .post('/api/login')
+      .send(credentials)
+      .expect(401);
 
     assert(res.body.error.includes('invalid username or password'));
     assert(!res.body.token);

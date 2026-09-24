@@ -21,7 +21,7 @@ describe('When theres initially some blogs saved', () => {
 
   test('returned blogs use id instead of _id', async () => {
     const response = await api.get('/api/blogs');
-    response.body.forEach((blog) => {
+    response.body.forEach(blog => {
       assert(blog.id);
       assert(!blog._id);
     });
@@ -40,13 +40,17 @@ describe('When theres initially some blogs saved', () => {
     test('fails with status code 404 if blog does not exits', async () => {
       const validId = await helper.nonExistingId();
 
-      await api.get(`/api/blogs/${validId}`).expect(404);
+      await api
+        .get(`/api/blogs/${validId}`)
+        .expect(404);
     });
 
     test('fails with status code 400 if id is invalid', async () => {
-      const invalidId = '43i3jqrkjj134';
+      const invalidId = "43i3jqrkjj134";
 
-      await api.get(`/api/blogs/${invalidId}`).expect(400);
+      await api
+        .get(`/api/blogs/${invalidId}`)
+        .expect(400);
     });
   });
 
@@ -60,9 +64,9 @@ describe('When theres initially some blogs saved', () => {
     test('succeeds with valid data', async () => {
       const blogsAtStart = await helper.blogsInDb();
       const newBlog = {
-        title: 'Foo Foo',
-        author: 'Bar Foo',
-        url: 'http://example.com',
+        title: "Foo Foo",
+        author: "Bar Foo",
+        url: "http://example.com",
         likes: 67,
       };
 
@@ -76,16 +80,16 @@ describe('When theres initially some blogs saved', () => {
       const blogsAtEnd = await helper.blogsInDb();
       assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1);
 
-      const titles = blogsAtEnd.map((b) => b.title);
+      const titles = blogsAtEnd.map(b => b.title);
       assert(titles.includes('Foo Foo'));
     });
 
     test('defaults likes to 0 if likes is missing', async () => {
       const blogsAtStart = await helper.blogsInDb();
       const newBlog = {
-        title: 'No Likes',
-        author: 'Bar Foo',
-        url: 'https://localhost.com',
+        title: "No Likes",
+        author: "Bar Foo",
+        url: "https://localhost.com",
       };
 
       await api
@@ -105,8 +109,8 @@ describe('When theres initially some blogs saved', () => {
 
     test('fails with proper status code and message if title is missing', async () => {
       const noTitle = {
-        author: 'No Title',
-        url: 'https://example.com',
+        author: "No Title",
+        url: "https://example.com",
         likes: 10,
       };
 
@@ -124,8 +128,8 @@ describe('When theres initially some blogs saved', () => {
 
     test('fails with proper status code and message if url is missing', async () => {
       const noUrl = {
-        title: 'No Url',
-        author: 'John Doe',
+        title: "No Url",
+        author: "John Doe",
         likes: 9,
       };
 
@@ -145,9 +149,9 @@ describe('When theres initially some blogs saved', () => {
       token = 'wrong';
 
       const newBlog = {
-        title: 'Foo Foo',
-        author: 'Bar Foo',
-        url: 'http://example.com',
+        title: "Foo Foo",
+        author: "Bar Foo",
+        url: "http://example.com",
         likes: 67,
       };
 
@@ -179,7 +183,7 @@ describe('When theres initially some blogs saved', () => {
       const blogsAtEnd = await helper.blogsInDb();
       assert.strictEqual(blogsAtEnd.length, blogsAtStart.length);
 
-      const titles = blogsAtEnd.map((blog) => blog.title);
+      const titles = blogsAtEnd.map(blog => blog.title);
       assert(titles.includes('succesful update'));
     });
 
@@ -200,7 +204,10 @@ describe('When theres initially some blogs saved', () => {
       const blog = await helper.nonExistingBlog();
       blog.title = 'non existing';
 
-      const res = await api.put(`/api/blogs/${blog.id}`).send(blog).expect(404);
+      const res = await api
+        .put(`/api/blogs/${blog.id}`)
+        .send(blog)
+        .expect(404);
 
       assert(res.body.error.includes(`blog with id \`${blog.id}\` not found`));
     });
@@ -224,7 +231,7 @@ describe('When theres initially some blogs saved', () => {
       const blogsAtEnd = await helper.blogsInDb();
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
 
-      const ids = blogsAtEnd.map((blog) => blog.id);
+      const ids = blogsAtEnd.map(blog => blog.id);
       assert(!ids.includes(id));
     });
 
@@ -236,64 +243,7 @@ describe('When theres initially some blogs saved', () => {
         .set('Authorization', token)
         .expect(401);
 
-      assert(
-        res.body.error.includes('blog can only be deleted by its creator')
-      );
-    });
-  });
-
-  describe('adding comments to a blog', () => {
-    let token;
-
-    beforeEach(async () => {
-      token = await helper.login(api, helper.initialUsers[1]);
-    });
-
-    test('succeeds if with valid blog id and comment', async () => {
-      let blogs = await helper.blogsInDb();
-      const blogAtStart = blogs[0];
-      const comment = 'Test comment';
-
-      await api
-        .post(`/api/blogs/${blogAtStart.id}/comments`)
-        .set('Authorization', token)
-        .send({ comment })
-        .expect(200);
-
-      blogs = await helper.blogsInDb();
-      const blogAtEnd = blogs[0];
-
-      assert.strictEqual(blogAtEnd.comments.length, blogAtStart.comments.length + 1);
-      assert(blogAtEnd.comments.includes(comment));
-    });
-
-    test('fails with proper status code and message if user is not logged in', async () => {
-      token = 'not logged in';
-      const blog = helper.initialBlogs[0];
-
-      const res = await api
-        .post(`/api/blogs/${blog._id}/comments`)
-        .set('Authorization', token)
-        .send({ comment: 'comment' })
-        .expect(401);
-
-      const blogs = await helper.blogsInDb();
-      const blogAtEnd = blogs[0];
-
-      assert.strictEqual(blog.comments.length, blogAtEnd.comments.length);
-      assert(res.body.error.includes('token missing or invalid'));
-    });
-
-    test('fails with proper status code and message if invalid blog id', async () => {
-      const invalidId = await helper.nonExistingId();
-
-      const res = await api
-        .post(`/api/blogs/${invalidId}/comments`)
-        .set('Authorization', token)
-        .send({ comment: 'comment' });
-
-      console.log(res.body);
-      assert(res.body.error.includes(`blog with id \`${invalidId}\` not found`));
+      assert(res.body.error.includes('blog can only be deleted by its creator'));
     });
   });
 });

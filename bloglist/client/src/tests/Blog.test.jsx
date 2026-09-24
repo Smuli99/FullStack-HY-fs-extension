@@ -53,16 +53,13 @@ describe('<Blog />', () => {
       expect(creator).toBeInTheDocument();
     });
 
+
     test('like button not shown', () => {
-      expect(
-        screen.queryByRole('button', { name: 'like' })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'like' })).not.toBeInTheDocument();
     });
 
     test('delete button not shown', () => {
-      expect(
-        screen.queryByRole('button', { name: 'delete' })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'delete' })).not.toBeInTheDocument();
     });
   });
 
@@ -82,9 +79,7 @@ describe('<Blog />', () => {
       });
 
       test('is shown', () => {
-        expect(
-          screen.getByRole('button', { name: 'like' })
-        ).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'like' })).toBeInTheDocument();
       });
 
       test('when clicked calls like handler with correct blog', async () => {
@@ -115,15 +110,13 @@ describe('<Blog />', () => {
           />
         );
 
-        expect(
-          screen.queryByRole('button', { name: 'delete' })
-        ).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'delete' })).toBeInTheDocument();
       });
 
       test('not shown if user is not blogs creator', () => {
         user = {
           username: 'another-user',
-          name: 'John Doe',
+          name: 'John Doe'
         };
 
         render(
@@ -135,9 +128,7 @@ describe('<Blog />', () => {
           />
         );
 
-        expect(
-          screen.queryByRole('button', { name: 'delete' })
-        ).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'delete' })).not.toBeInTheDocument();
       });
 
       test('when clicked calls remove handler with correct blog', async () => {

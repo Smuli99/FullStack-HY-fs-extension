@@ -1,13 +1,11 @@
 {
-  "name": "BlogApp",
+  "name": "bloglist",
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "build": "npm run build --prefix client",
-    "start": "NODE_ENV=production npm start --prefix server"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "concurrently": "^10.0.5",
-    "prettier": "3.9.8"
-  }
+  "author": "Samu Hytönen",
+  "license": "ISC",
+  "description": ""
 }
