@@ -3,7 +3,7 @@ import { Container, AppBar, Toolbar, Button } from '@mui/material';
 import { useBlogs } from './hooks/useBlogs';
 import { useNavigate } from 'react-router-dom';
 import useNotify from './hooks/useNotify';
-import useUser from './hooks/useUser';
+import useUser from './hooks/useSignedinUser';
 
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
@@ -13,6 +13,7 @@ import NewBlogForm from './components/NewBlogForm';
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './components/NotFound';
 import Users from './components/Users';
+import User from './components/User';
 
 const App = () => {
   const { user, logout } = useUser();
@@ -54,6 +55,7 @@ const App = () => {
           <Route path='/login' element={ <LoginForm /> } />
           <Route path='/create' element={ <NewBlogForm /> } />
           <Route path='/users' element={ <Users /> } />
+          <Route path='/users/:id' element={ <User /> } />
           <Route path='*' element={ <NotFound /> } />
         </Routes>
       </ErrorBoundary>

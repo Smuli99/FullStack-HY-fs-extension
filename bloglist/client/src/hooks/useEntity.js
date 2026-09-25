@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useBlogs } from './useBlogs';
+import { useUsers } from './useUsers';
 
 const useEntityById = (entities) => {
   const { id } = useParams();
@@ -9,4 +10,9 @@ const useEntityById = (entities) => {
 export const useBlog = () => {
   const { blogs } = useBlogs();
   return useEntityById(blogs);
+};
+
+export const useUser = () => {
+  const { users } = useUsers();
+  return useEntityById(users);
 };

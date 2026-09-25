@@ -55,6 +55,10 @@ a:hover {
   font-weight: bold;
 }
 
+.user {
+  margin-top: 10px;
+}
+
 /* Icons */
 
 .icon {

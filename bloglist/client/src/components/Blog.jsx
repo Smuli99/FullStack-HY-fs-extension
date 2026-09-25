@@ -5,7 +5,7 @@ import {
 
 import { useBlogs } from '../hooks/useBlogs';
 import { useNavigate } from 'react-router-dom';
-import { useBlog } from '../hooks/useBlog';
+import { useBlog } from '../hooks/useEntity';
 import useNotify from '../hooks/useNotify';
 
 import LinkIcon from '@mui/icons-material/Link';

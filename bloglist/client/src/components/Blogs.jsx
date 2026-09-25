@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useBlogs } from '../hooks/useBlogs';
-import useUser from '../hooks/useUser';
+import useUser from '../hooks/useSignedinUser';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
 const Blogs = () => {
