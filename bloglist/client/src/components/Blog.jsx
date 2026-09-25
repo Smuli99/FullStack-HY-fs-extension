@@ -3,28 +3,50 @@ import {
   Typography, Link
 } from '@mui/material';
 
+import { useBlogs } from '../hooks/useBlogs';
+import { useNavigate } from 'react-router-dom';
+import { useBlog } from '../hooks/useBlog';
+import useNotify from '../hooks/useNotify';
+
 import LinkIcon from '@mui/icons-material/Link';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
-const Blog = ({
-  blog,
-  user,
-  removeBlog,
-  updateBlogsLikes,
-}) => {
-  const handleLike = () => updateBlogsLikes(blog);
-  const handleRemove = () => removeBlog(blog);
+const Blog = ({ user }) => {
+  const blog = useBlog();
+  const { updateBlog, removeBlog } = useBlogs();
+  const { notify, resetNotify } = useNotify();
+  const navigate = useNavigate();
+
+  const handleLike = async () => {
+    try {
+      await updateBlog(blog);
+    } catch (error) {
+      notify(error.response.data.error, 'error');
+      setTimeout(() => resetNotify(), 3000);
+    }
+  };
+
+  const handleRemove = async () => {
+    if (!window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}?`
+    )) return;
+
+    try {
+      await removeBlog(blog.id);
+      navigate('/');
+      notify(`Blog ${blog.title} by ${blog.author} deleted!`);
+      setTimeout(() => resetNotify(), 3000);
+    } catch (error) {
+      notify(error.response.data.error, 'error');
+      setTimeout(() => resetNotify(), 3000);
+    }
+  };
 
   return (
     <Card className='blog'>
       <CardContent>
-        <Typography variant='h6'>
-          {blog.title}
-        </Typography>
-
-        <Typography variant='subtitle1'>
-           by {blog.author}
-        </Typography>
+        <Typography variant='h6'>{blog.title}</Typography>
+        <Typography variant='subtitle1'>by {blog.author}</Typography>
 
         <Typography style={{ marginTop: '10px' }}>
           <Link href={blog.url}>

@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useBlogs } from '../hooks/useBlogs';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
-const Blogs = ({ blogs, user }) => {
+const Blogs = ({ user }) => {
+  const { blogs } = useBlogs();
 
   return (
     <div>

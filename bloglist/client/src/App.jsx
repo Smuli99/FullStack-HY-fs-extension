@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { Container, AppBar, Toolbar, Button } from '@mui/material';
+import { useBlogs } from './hooks/useBlogs';
 import useNotify from './hooks/useNotify';
 
 import Notification from './components/Notification';
@@ -25,27 +26,16 @@ const App = () => {
   };
 
   const [user, setUser] = useState(getLoggedUser);
-  const [blogs, setBlogs] = useState([]);
 
+  const { isPending } = useBlogs();
   const { notify, resetNotify } = useNotify();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const blogs = await blogServices.getAll();
-      setBlogs(blogs);
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     if (user) {
       blogServices.setToken(user.token);
     }
   }, [user]);
-
-  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
 
   const login = async (credentials) => {
     try {
@@ -75,65 +65,7 @@ const App = () => {
     setTimeout(() => resetNotify(), 3000);
   };
 
-  const createBlog = async (blog) => {
-    try {
-      const savedBlog = await blogServices.create(blog);
-      setBlogs(blogs.concat(savedBlog));
-
-      notify(`\`${blog.title}\` by ${blog.author} added!`);
-      setTimeout(() => resetNotify(), 3000);
-    } catch (error) {
-      notify(error.response.data.error, 'error');
-      setTimeout(() => resetNotify(), 3000);
-    }
-  };
-
-  const updateBlogsLikes = async (blog) => {
-    try {
-      const blogToUpdate = {
-        ...blog,
-        likes: blog.likes + 1
-      };
-
-      const updatedBlog = await blogServices.update(blogToUpdate);
-      setBlogs(
-        blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)
-      );
-    } catch (error) {
-      console.log(error);
-
-      notify(error.response.data.error, 'error');
-      setTimeout(() => resetNotify(), 3000);
-    }
-  };
-
-  const removeBlog = async (blogToDelete) => {
-    if (!window.confirm(
-      `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`
-    )) return;
-
-    navigate('/');
-
-    try {
-      await blogServices.remove(blogToDelete);
-
-      setBlogs(
-        blogs.filter(blog => blog.id !== blogToDelete.id)
-      );
-
-      notify(`Blog ${blogToDelete.title} by ${blogToDelete.author} deleted!`);
-      setTimeout(() => resetNotify(), 3000);
-    } catch (error) {
-      notify(error.response.data.error, 'error');
-      setTimeout(() => resetNotify(), 3000);
-    }
-  };
-
-  const match = useMatch('/blogs/:id');
-  const blog = match
-    ? blogs.find(b => b.id === match.params.id)
-    : null;
-
+  if (isPending) return <div>Loading...</div>;
 
   return (
     <Container>
@@ -154,27 +86,10 @@ const App = () => {
         <Notification />
 
         <Routes>
-          <Route path='/' element={
-            <BlogApp
-              blogs={sortedBlogs}
-              user={user}
-              removeBlog={removeBlog}
-            />
-          } />
-          <Route path='/blogs/:id' element={
-            <Blog
-              blog={blog}
-              user={user}
-              removeBlog={removeBlog}
-              updateBlogsLikes={updateBlogsLikes}
-            />
-          } />
-          <Route path='/login' element={
-            <LoginForm login={login} />
-          } />
-          <Route path='/create' element={
-            <NewBlogForm createBlog={createBlog} />
-          } />
+          <Route path='/' element={ <BlogApp user={user} /> } />
+          <Route path='/blogs/:id' element={ <Blog user={user} /> } />
+          <Route path='/login' element={ <LoginForm login={login} /> } />
+          <Route path='/create' element={ <NewBlogForm /> } />
           <Route path='*' element={ <NotFound /> } />
         </Routes>
       </ErrorBoundary>
