@@ -1,32 +1,38 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useNotify from '../hooks/useNotify';
 
 import {
   InputAdornment, TextField,
   IconButton, Button
 } from '@mui/material';
 
+import useUser from '../hooks/useUser';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const { login } = useUser();
+  const { notify, resetNotify } = useNotify();
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-
-    login({
-      username,
-      password
-    });
-
-    navigate('/');
-    setUsername('');
-    setPassword('');
+    try {
+      await login({ username, password });
+      notify(`${username} logged in!`);
+      setTimeout(() => resetNotify(), 3000);
+      navigate('/');
+      setUsername('');
+      setPassword('');
+    } catch {
+      notify('wrong username or password', 'error');
+      setTimeout(() => resetNotify(), 3000);
+    };
   };
 
   return (

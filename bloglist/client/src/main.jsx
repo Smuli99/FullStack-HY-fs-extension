@@ -5,6 +5,7 @@ import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { NotificationContextProvider } from './contexts/NotificationContext';
+import { SignedinUserContextProvider } from './contexts/SignedinUser';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,7 +24,9 @@ ReactDom.createRoot(document.getElementById('root')).render(
       <CssBaseline />
       <Router>
         <NotificationContextProvider>
-          <App />
+          <SignedinUserContextProvider>
+            <App />
+          </SignedinUserContextProvider>
         </NotificationContextProvider>
       </Router>
     </ThemeProvider>

@@ -1,10 +1,10 @@
 import Blogs from './Blogs';
 
-const BlogApp = ({ user }) => {
+const BlogApp = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Blogs user={user} />
+      <Blogs />
     </div>
   );
 };
