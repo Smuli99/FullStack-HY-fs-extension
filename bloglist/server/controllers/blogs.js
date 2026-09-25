@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const { userExtractor } = require('../utils/middleware');
 
 blogRouter.get('/', async (req, res) => {
@@ -69,11 +70,19 @@ blogRouter.delete('/:id', userExtractor, async (req, res) => {
 
   const blogToDelete = await Blog.findById(req.params.id);
 
+  if (!blogToDelete) {
+    return res.status(400).json({ error: 'blog not found' });
+  }
+
   if (user.id.toString() !== blogToDelete.user.toString()) {
     return res.status(401).json({ error: 'blog can only be deleted by its creator' });
   }
 
   await blogToDelete.deleteOne();
+  await User.findByIdAndUpdate(user.id, {
+    $pull: { blogs: blogToDelete.id }
+  });
+
   res.status(204).end();
 });
 
