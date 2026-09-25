@@ -47,6 +47,14 @@ a:hover {
   margin-top: 10px;
 }
 
+.users {
+  margin-top: 10px;
+}
+
+.users tr th {
+  font-weight: bold;
+}
+
 /* Icons */
 
 .icon {
