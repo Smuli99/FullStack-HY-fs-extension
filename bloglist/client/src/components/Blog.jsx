@@ -3,6 +3,8 @@ import {
   Typography, Link
 } from '@mui/material';
 
+import Comments from './Comments';
+
 import { useBlogs } from '../hooks/useBlogs';
 import { useNavigate } from 'react-router-dom';
 import { useBlog } from '../hooks/useEntity';
@@ -45,7 +47,9 @@ const Blog = ({ user }) => {
   return (
     <Card className='blog'>
       <CardContent>
-        <Typography variant='h6'>{blog.title}</Typography>
+        <Typography variant='h6'>
+          <strong>{blog.title}</strong>
+        </Typography>
         <Typography variant='subtitle1'>by {blog.author}</Typography>
 
         <Typography style={{ marginTop: '10px' }}>
@@ -70,9 +74,10 @@ const Blog = ({ user }) => {
           Added by {blog.user.name}
         </Typography>
 
+        <Comments blog={blog} user={user} />
         {user && blog.user.username === user.username && (
           <Button
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, marginLeft: 0 }}
             size='small'
             color='error'
             variant='outlined'

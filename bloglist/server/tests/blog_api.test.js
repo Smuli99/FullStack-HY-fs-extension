@@ -213,6 +213,51 @@ describe('When theres initially some blogs saved', () => {
     });
   });
 
+  describe('commenting on a blog', () => {
+    let token;
+
+    beforeEach(async () => {
+      token = await helper.login(api, helper.initialUsers[1]);
+    });
+
+    test('succeeds with valid comment', async () => {
+      let blogs = await helper.blogsInDb();
+      const blogAtStart = blogs[0];
+      const comment = 'test comment';
+
+      await api
+        .post(`/api/blogs/${blogAtStart.id}/comments`)
+        .set('Authorization', token)
+        .send({ comment })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      blogs = await helper.blogsInDb();
+      const blogAtEnd = blogs[0];
+
+      assert.strictEqual(blogAtEnd.comments.length, blogAtStart.comments.length + 1);
+      assert(blogAtEnd.comments.includes(comment));
+    });
+
+    test('fails with proper status code and message if invalid comment', async () => {
+      let blogs = await helper.blogsInDb();
+      const blogAtStart = blogs[0];
+      const comment = '      m';
+
+      const res = await api
+        .post(`/api/blogs/${blogAtStart.id}/comments`)
+        .set('Authorization', token)
+        .send({ comment })
+        .expect(400);
+
+      blogs = await helper.blogsInDb();
+      const blogAtEnd = blogs[0];
+
+      assert.strictEqual(blogAtEnd.comments.length, blogAtStart.comments.length);
+      assert(res.body.error.includes('comment length must be at least 2 characters'));
+    });
+  });
+
   describe('deletion of a blog', () => {
     let token;
 

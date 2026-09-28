@@ -42,6 +42,36 @@ blogRouter.post('/', userExtractor, async (req, res) => {
   res.status(201).json(savedBlog);
 });
 
+blogRouter.post('/:id/comments', userExtractor, async (req, res) => {
+  const { comment } = req.body;
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ error: 'token missing or invalid' });
+  }
+
+  if (!comment) {
+    return res.status(400).json({ error: 'invalid comment' });
+  }
+
+  if (comment.trim().length < 2) {
+    return res.status(400).json({ error: 'comment length must be at least 2 characters' });
+  }
+
+  const blogToUpdate = await Blog.findById(req.params.id);
+
+  if (!blogToUpdate) {
+    return res.status(404).json({ error: `blog with id \`${req.params.id}\` not found` });
+  };
+
+  blogToUpdate.comments = blogToUpdate.comments.concat(comment);
+
+  const savedBlog = await blogToUpdate.save();
+  await savedBlog.populate('user', { username: 1, name: 1 });
+
+  res.json(savedBlog);
+});
+
 blogRouter.put('/:id', async (req, res) => {
   const { title, author, url, likes } = req.body;
   const blogToUpdate = await Blog.findById(req.params.id);

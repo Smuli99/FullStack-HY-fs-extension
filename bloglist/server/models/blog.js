@@ -16,6 +16,9 @@ const blogSchema = mongoose.Schema({
     required: true,
     ref: 'User',
   },
+  comments: {
+    type: [String],
+  }
 });
 
 blogSchema.set('toJSON', {
