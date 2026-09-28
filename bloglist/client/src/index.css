@@ -59,6 +59,14 @@ a:hover {
   margin-top: 10px;
 }
 
+.addComment {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
 /* Icons */
 
 .icon {

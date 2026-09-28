@@ -33,7 +33,18 @@ export const useBlogs = () => {
     mutationFn: blogService.remove,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogs'] });
-    }
+    },
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: ({ id, comment }) => blogService.createComment(id, comment),
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueriesData(
+        ['blogs'],
+        blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
+      );
+    },
   });
 
   const sortedBlogs = result.data
@@ -46,5 +57,6 @@ export const useBlogs = () => {
     addBlog: (blog) => newBlogMutation.mutateAsync(blog),
     updateBlog: (blog) => updateBlogMutation.mutateAsync({ ...blog, likes: blog.likes + 1 }),
     removeBlog: (id) => removeBlogMutation.mutateAsync(id),
+    addComment: (id, comment) => addCommentMutation.mutateAsync({ id, comment }),
   };
 };
