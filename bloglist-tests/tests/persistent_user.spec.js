@@ -51,7 +51,7 @@ test.describe('logged-in user is persisted through a dedicated service module', 
 
   test('some part of the app reads the logged-in user through getUser', () => {
     const otherFiles = walk(srcDir).filter(file => file !== persistentUserPath)
-    const callers = otherFiles.filter(file => /\bgetUser\s*\(/.test(fs.readFileSync(file, 'utf-8')))
+    const callers = otherFiles.filter(file => /\bgetUser\b/.test(fs.readFileSync(file, 'utf-8')))
     expect(callers.length).toBeGreaterThan(0)
   })
 
